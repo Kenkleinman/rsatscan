@@ -1,0 +1,182 @@
+---
+title: "rsatscan"
+author: "Ken Kleinman"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rsatscan}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+SaTScan is a powerful stand-alone software program that runs spation-temporal scan statistics.  It is carefully optimized and contains many tricks to reduce the computational burden of the approach, which is doubly computationaly intensive.  First, scanning itself can be costly, particularly in spatio-temporal settings.  However, even more difficult, testing involves resampling (Monte Carlo hypothesis testing).  For these reasons, it is not worthwhile to attempt replicating SaTScan.  In addition, while SaTScan is not open source, it is distributed free of charge. 
+
+However, use of SaTScan can be cumbersome.  There are two means of access: a GUI, and a batch file.  The GUI allows complete control, but precludes automated or repeated operation.  The batch file allows this, but may be difficult to integrate into other analyses.  The `rsatscan` package contains a set of functions and defines a class and methods to make it easy to work with SaTScan from R.  This should allow easy automation and integration.
+
+The functions in the package can be grouped into three sets:
+SaTScan parameter functions that set parameters for SaTScan or write them in a file to the OS; write functions that write R data frames to the OS in SaTScan-readable formats; and the `satscan()` function, which calls out into the OS, runs SaTScan, and returns a `satscan` class object.  Successful use of the package requires a fairly precise understanding of the SaTScan parameter file, for which users are referred to the SaTScan manual.
+
+```{r}
+library("rsatscan")
+```
+
+Basic usage of the package will:
+
+1. use the `ss.options()` function to set SaTScan parameters; these are saved in R
+2. use the `write.ss.prm()` function to write the SaTScan parameter file
+3. use the `satscan()` function to run SaTScan
+4. use `summary()` on the `satscan` object and proceed to analyze the results from SaTScan in R.
+
+# Space-Time Permutation example: NYC fever data
+
+The New York City fever data, which are distributed with SaTScan, are also included with the package.
+```{r}
+head(NYCfevercas)
+head(NYCfevergeo)
+```
+
+For good style, an analysis would begin by resetting the paremeter file:
+```{r}
+invisible(ss.options(reset=TRUE))
+```
+
+Then, one would change parameters as desired.  This can be done in as many or few steps as you like; the previous state of the parameter set is retained, as in `par()` or `options()`.    Here, the parameters used in the example from the SaTScan manual are replicated:
+```{r}
+ss.options(list(CaseFile="NYCfever.cas", PrecisionCaseTimes=3))
+ss.options(c("StartDate=2001/11/1","EndDate=2001/11/24"))
+ss.options(list(CoordinatesFile="NYCfever.geo", AnalysisType=4, ModelType=2, TimeAggregationUnits=3))
+ss.options(list(UseDistanceFromCenterOption="y", MaxSpatialSizeInDistanceFromCenter=3, NonCompactnessPenalty=0))
+ss.options(list(MaxTemporalSizeInterpretation=1, MaxTemporalSize=7))
+ss.options(list(ProspectiveStartDate="2001/11/24", ReportGiniClusters="n", LogRunToHistoryFile="n"))
+```
+Note that the second call to `ss.options()` uses the character vector format, while the others use the list format; either works.
+
+It might be reasonable at this point to check what the parameter file looks like:
+```{r}
+head(ss.options(),3)
+```
+
+Then, we write the parameter file, the case file, and the geometry file to some writeable location in the OS, using the functions in package.  These ensure that SaTScan-readable formats are used.
+```{r}
+td = tempdir()
+write.ss.prm(td, "NYCfever")
+write.cas(NYCfevercas, td, "NYCfever")
+write.geo(NYCfevergeo, td, "NYCfever")
+```
+The `write.???` functions append the appropriate file extensions to the files they save into the OS.
+
+Then we're ready to run SaTScan.  The default locations in the function correspond to the location of the executable on my disk, so those or not specified here.
+```{r}
+# This step omitted in compliance with CRAN policies
+# Please install SaTScan and run the vignette with this and following code uncommented
+# SaTScan can be downloaded from www.satscan.org, free of charge
+# you will also find there fully compiled versions of this vignette with results
+
+NYCfever = satscan(td, "NYCfever")
+```
+
+The `rsatscan` package provides a `summary` method for `satscan` objects.
+```{r}
+summary(NYCfever)
+```
+
+The `satscan` object has a slot for each possible output file that SaTScan creates, and contains whatever output files your call happened to generate.
+
+```{r}
+summary.default(NYCfever)
+```
+
+If SaTScan generated a shapefile, `satscan()` reads it, by way of the `rgdal` function `readOGR()`, if it's available, into a class defined in the `sp` package.  You can use the plot methods defined in the `sp` package to plot it, or use one of the many packages that builds on the `sp` package for further processing.
+
+```{r}
+sp::plot(NYCfever$shapeclust)
+```
+
+It might be interesting to examine the scan statistics from the Monte Carlo steps.
+```{r, fig.keep="all", fig.show="hold"}
+hist(unlist(NYCfever$llr), main="Monte Carlo")
+
+# Let's draw a line for the clusters in the observed data
+abline(v=NYCfever$col[,c("TEST_STAT")], col = "red")
+```
+
+This shows why none of the observed clusters had small p=values.
+
+```{r, echo=FALSE, include=FALSE    }
+#clean up!
+file.remove(paste0(td,"NYCfever.prm"))
+file.remove(paste0(td,"NYCfever.cas"))
+file.remove(paste0(td,"NYCfever.geo"))
+```
+
+
+
+# Poisson spatio-temporal example: New Mexico brain tumor data
+
+This is another data set included with `SaTScan`.  It differs from the NYC fever examle in that denominators are available; these are porvided in a population file.  The analysis uses the Poisson model rather than the Spatio-temporal permutation.
+
+```{r}
+write.cas(NMcas, td,"NM")
+write.geo(NMgeo, td,"NM")
+write.pop(NMpop, td,"NM")
+```
+
+Again, replicating the examples from the SaTScan user guide, we set up and then write the parameter file, then run SaTScan.
+```{r}
+invisible(ss.options(reset=TRUE))
+ss.options(list(CaseFile="NM.cas",StartDate="1973/1/1",EndDate="1991/12/31", 
+                PopulationFile="NM.pop",
+                CoordinatesFile="NM.geo", CoordinatesType=0, AnalysisType=3))
+ss.options(c("NonCompactnessPenalty=0", "ReportGiniClusters=n", "LogRunToHistoryFile=n"))
+
+write.ss.prm(td,"testnm")
+testnm = satscan(td,"testnm")
+```
+Note that the parameter file need not have the same name as the case and other input files, which also need not share a name, though it may be helpful in keeping things organized later.
+```{r}
+summary(testnm)
+```
+
+One of the elements of a `satscan` class object is the parameter set which was used to call SaTScan.  This may be useful, later.
+
+```{r}
+head(testnm$prm,10)
+```
+
+```{r, echo=FALSE, include=FALSE    }
+#clean up!
+file.remove(paste0(td,"testnm.prm"))
+file.remove(paste0(td,"NM.pop"))
+file.remove(paste0(td,"NM.cas"))
+file.remove(paste0(td,"NM.geo"))
+```
+
+# Bernoulli purely spatial example: North Humberside leukemia and lymphoma
+
+A third data set included with `SaTScan` is also included with the package.  This one has cases and controls, and uses the Bernoulli model.  We replicate the parameters from the `SaTScan` manual again.
+
+```{r}
+write.cas(NHumbersidecas, td, "NHumberside")
+write.ctl(NHumbersidectl, td, "NHumberside")
+write.geo(NHumbersidegeo, td, "NHumberside")
+
+invisible(ss.options(reset=TRUE))
+ss.options(list(CaseFile="NHumberside.cas", ControlFile="NHumberside.ctl"))
+ss.options(list(PrecisionCaseTimes=0, StartDate="2001/11/1", EndDate="2001/11/24"))
+ss.options(list(CoordinatesFile="NHumberside.geo", CoordinatesType=0, ModelType=1))
+ss.options(list(TimeAggregationUnits = 3, NonCompactnessPenalty=0))
+ss.options(list(ReportGiniClusters="n", LogRunToHistoryFile="n"))
+
+write.ss.prm(td, "NHumberside")
+NHumberside = satscan(td, "NHumberside")
+
+summary(NHumberside)
+```
+
+```{r, echo=FALSE, include=FALSE    }
+#clean up!
+file.remove(paste0(td,"NHumberside.cas"))
+file.remove(paste0(td,"NHumberside.ctl"))
+file.remove(paste0(td,"NHumberside.geo"))
+file.remove(paste0(td,"NHumberside.prm"))
+```

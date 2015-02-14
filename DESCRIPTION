@@ -1,0 +1,26 @@
+Package: rsatscan
+Title: Tools, Classes, and Methods for Interfacing with SaTScan Stand-Alone
+    Software
+Description: SaTScan(TM) (http://www.satscan.org) is software for finding regions in 
+    Time, Space, or Time-Space that have excess risk, based on scan statistics, and 
+	uses Monte Carlo hypothesis testing to generate P-values for these regions.  The 
+	rsatscan package provides functions for writing R data frames in 
+	SaTScan-readable formats, for setting SaTScan parameters, for running SaTScan in 
+	the OS, and for reading the files that SaTScan creates.  
+Version: 0.3.9122
+Date: 2015-01-09
+URL: http://www.satscan.org
+Authors@R: person("Ken", "Kleinman", email= "ken.kleinman@gmail.com", role=c("aut", "cre"))
+Maintainer: Ken Kleinman <ken.kleinman@gmail.com>
+Depends: 
+    R (>= 3.0.2)
+Imports: 
+    utils,
+	foreign
+Suggests: 
+    knitr,
+    rgdal (>= 0.9.1),
+	sp (>= 1.0-9)
+VignetteBuilder: knitr
+License: GPL-3
+LazyData: true

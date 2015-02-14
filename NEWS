@@ -1,0 +1,33 @@
+Version 0.3.9122 (2-5-2015)
+-----------------------------------------------------------
+
+* Changes to vignettes, following discussions with CRAN maintainers
+
+
+Version 0.3.911 (1-22-2015)
+-----------------------------------------------------------
+
+* satscan() "cleanup" parameter (TRUE by default) removes the SaTScan output files from the OS
+
+
+Version 0.3.9102 (1-21-2015)
+-----------------------------------------------------------
+
+* satscan() robust to presence or absence of trailing "/" for parameter file and SaTScan batch file location.
+
+
+
+Version 0.3.9000 (1-18-2015)
+-----------------------------------------------------------
+
+* satscan() to run SaTScan
+* ss.options() to set parameters
+* write.ss.prm() to write parameter file
+* write.??? to write data for SaTScan
+* This version tested on:
+**  Windows 7 with SaTScan 9.2, R 3.1.2, R 3.2 (devel)
+**  Windows 7 with SaTScan 9.3.1, R 3.0.2, R 3.0.3
+**  Ubuntu 14.04.1 with SaTScan 9.3.1, R 3.1.2
+
+
+
