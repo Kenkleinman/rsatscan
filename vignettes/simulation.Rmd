@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-In this vignette, I use the space-time permutation scan to show making data in R, running SaTScan on the generated data, and collecting the results.
+In this vignette, I use the space-time permutation scan to show how the rsatscan package can be used to simplify the process of making data in R, running SaTScan on the generated data, and collecting the results, presumably leading to quicker and easier accumulation of results.
 
 I begin by making data on a 10*10 grid of locations, over 30 days.  Each day, each location has a 0.1 probability of having a single case.  
 ```{r}
