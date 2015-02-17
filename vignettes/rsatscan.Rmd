@@ -72,41 +72,41 @@ Then we're ready to run SaTScan.  The default locations in the function correspo
 # SaTScan can be downloaded from www.satscan.org, free of charge
 # you will also find there fully compiled versions of this vignette with results
 
-NYCfever = satscan(td, "NYCfever")
+# NYCfever = satscan(td, "NYCfever")
 ```
 
 The `rsatscan` package provides a `summary` method for `satscan` objects.
 ```{r}
-summary(NYCfever)
+# summary(NYCfever)
 ```
 
 The `satscan` object has a slot for each possible output file that SaTScan creates, and contains whatever output files your call happened to generate.
 
 ```{r}
-summary.default(NYCfever)
+# summary.default(NYCfever)
 ```
 
 If SaTScan generated a shapefile, `satscan()` reads it, by way of the `rgdal` function `readOGR()`, if it's available, into a class defined in the `sp` package.  You can use the plot methods defined in the `sp` package to plot it, or use one of the many packages that builds on the `sp` package for further processing.
 
 ```{r}
-sp::plot(NYCfever$shapeclust)
+# sp::plot(NYCfever$shapeclust)
 ```
 
 It might be interesting to examine the scan statistics from the Monte Carlo steps.
 ```{r, fig.keep="all", fig.show="hold"}
-hist(unlist(NYCfever$llr), main="Monte Carlo")
+# hist(unlist(NYCfever$llr), main="Monte Carlo")
 
 # Let's draw a line for the clusters in the observed data
-abline(v=NYCfever$col[,c("TEST_STAT")], col = "red")
+# abline(v=NYCfever$col[,c("TEST_STAT")], col = "red")
 ```
 
 This shows why none of the observed clusters had small p=values.
 
 ```{r, echo=FALSE, include=FALSE    }
 #clean up!
-file.remove(paste0(td,"NYCfever.prm"))
-file.remove(paste0(td,"NYCfever.cas"))
-file.remove(paste0(td,"NYCfever.geo"))
+file.remove(paste0(td,"/NYCfever.prm"))
+file.remove(paste0(td,"/NYCfever.cas"))
+file.remove(paste0(td,"/NYCfever.geo"))
 ```
 
 
@@ -130,7 +130,7 @@ ss.options(list(CaseFile="NM.cas",StartDate="1973/1/1",EndDate="1991/12/31",
 ss.options(c("NonCompactnessPenalty=0", "ReportGiniClusters=n", "LogRunToHistoryFile=n"))
 
 write.ss.prm(td,"testnm")
-testnm = satscan(td,"testnm")
+# testnm = satscan(td,"testnm")
 ```
 Note that the parameter file need not have the same name as the case and other input files, which also need not share a name, though it may be helpful in keeping things organized later.
 ```{r}
@@ -145,10 +145,10 @@ head(testnm$prm,10)
 
 ```{r, echo=FALSE, include=FALSE    }
 #clean up!
-file.remove(paste0(td,"testnm.prm"))
-file.remove(paste0(td,"NM.pop"))
-file.remove(paste0(td,"NM.cas"))
-file.remove(paste0(td,"NM.geo"))
+file.remove(paste0(td,"/testnm.prm"))
+file.remove(paste0(td,"/NM.pop"))
+file.remove(paste0(td,"/NM.cas"))
+file.remove(paste0(td,"/NM.geo"))
 ```
 
 # Bernoulli purely spatial example: North Humberside leukemia and lymphoma
@@ -168,15 +168,15 @@ ss.options(list(TimeAggregationUnits = 3, NonCompactnessPenalty=0))
 ss.options(list(ReportGiniClusters="n", LogRunToHistoryFile="n"))
 
 write.ss.prm(td, "NHumberside")
-NHumberside = satscan(td, "NHumberside")
+# NHumberside = satscan(td, "NHumberside")
 
-summary(NHumberside)
+# summary(NHumberside)
 ```
 
 ```{r, echo=FALSE, include=FALSE    }
 #clean up!
-file.remove(paste0(td,"NHumberside.cas"))
-file.remove(paste0(td,"NHumberside.ctl"))
-file.remove(paste0(td,"NHumberside.geo"))
-file.remove(paste0(td,"NHumberside.prm"))
+file.remove(paste0(td,"/NHumberside.cas"))
+file.remove(paste0(td,"/NHumberside.ctl"))
+file.remove(paste0(td,"/NHumberside.geo"))
+file.remove(paste0(td,"/NHumberside.prm"))
 ```
