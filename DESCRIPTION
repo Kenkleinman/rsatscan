@@ -7,8 +7,8 @@ Description: SaTScan(TM) (http://www.satscan.org) is software for finding region
 	rsatscan package provides functions for writing R data frames in 
 	SaTScan-readable formats, for setting SaTScan parameters, for running SaTScan in 
 	the OS, and for reading the files that SaTScan creates.  
-Version: 0.3.9122
-Date: 2015-01-09
+Version: 0.3.9200
+Date: 2015-03-17
 URL: http://www.satscan.org
 Authors@R: person("Ken", "Kleinman", email= "ken.kleinman@gmail.com", role=c("aut", "cre"))
 Maintainer: Ken Kleinman <ken.kleinman@gmail.com>

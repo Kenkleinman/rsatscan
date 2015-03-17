@@ -1,5 +1,6 @@
 .onAttach <- function(libname, pkgname) { 
-  packageStartupMessage("RSaTScan only does anything useful if you have SaTScan-- see http://www.satscan.org/ for free access.")
+  packageStartupMessage("rsatscan only does anything useful if you have SaTScan")
+  packageStartupMessage("See http://www.satscan.org/ for free access")
 
   #These resemble defaults in satscan, but save all the dbase files
   

@@ -60,7 +60,7 @@ Then run SaTScan.
 # Please install SaTScan and run the vignette with this and following code uncommented
 # SaTScan can be downloaded from www.satscan.org, free of charge
 
-# NYCfever = satscan(td,"NYCfever")
+# NYCfever = satscan(td,"NYCfever", sslocation="C:/Program Files (x86)/SaTScan")
 ```
 
 The `rsatscan` package provides a `summary` method for `satscan` objects.

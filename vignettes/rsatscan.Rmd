@@ -9,7 +9,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-SaTScan is a powerful stand-alone software program that runs spation-temporal scan statistics.  It is carefully optimized and contains many tricks to reduce the computational burden of the approach, which is doubly computationaly intensive.  First, scanning itself can be costly, particularly in spatio-temporal settings.  However, even more difficult, testing involves resampling (Monte Carlo hypothesis testing).  For these reasons, it is not worthwhile to attempt replicating SaTScan.  In addition, while SaTScan is not open source, it is distributed free of charge. 
+SaTScan is a powerful stand-alone software program that runs spation-temporal scan statistics.  It is carefully optimized and contains many tricks to reduce the computational burden of the approach, which is doubly computationaly intensive.  First, scanning itself can be costly, particularly in spatio-temporal settings.  However, even more difficult, testing involves resampling (Monte Carlo hypothesis testing).  While SaTScan is not open source, it is distributed free of charge. 
 
 However, use of SaTScan can be cumbersome.  There are two means of access: a GUI, and a batch file.  The GUI allows complete control, but precludes automated or repeated operation.  The batch file allows this, but may be difficult to integrate into other analyses.  The `rsatscan` package contains a set of functions and defines a class and methods to make it easy to work with SaTScan from R.  This should allow easy automation and integration.
 
@@ -65,39 +65,39 @@ write.geo(NYCfevergeo, td, "NYCfever")
 ```
 The `write.???` functions append the appropriate file extensions to the files they save into the OS.
 
-Then we're ready to run SaTScan.  The default locations in the function correspond to the location of the executable on my disk, so those or not specified here.
+Then we're ready to run SaTScan.  The location of the SaTScan executable may well differ on you r disk, particularly if you do not use Windows.  In a later release of the package, it may be possible to detect the location the executable
 ```{r}
 # This step omitted in compliance with CRAN policies
 # Please install SaTScan and run the vignette with this and following code uncommented
 # SaTScan can be downloaded from www.satscan.org, free of charge
 # you will also find there fully compiled versions of this vignette with results
 
-# NYCfever = satscan(td, "NYCfever")
+## NYCfever = satscan(td, "NYCfever", sslocation="C:/Program Files (x86)/SaTScan")
 ```
 
 The `rsatscan` package provides a `summary` method for `satscan` objects.
 ```{r}
-# summary(NYCfever)
+## summary(NYCfever)
 ```
 
 The `satscan` object has a slot for each possible output file that SaTScan creates, and contains whatever output files your call happened to generate.
 
 ```{r}
-# summary.default(NYCfever)
+## summary.default(NYCfever)
 ```
 
 If SaTScan generated a shapefile, `satscan()` reads it, by way of the `rgdal` function `readOGR()`, if it's available, into a class defined in the `sp` package.  You can use the plot methods defined in the `sp` package to plot it, or use one of the many packages that builds on the `sp` package for further processing.
 
 ```{r}
-# sp::plot(NYCfever$shapeclust)
+## sp::plot(NYCfever$shapeclust)
 ```
 
 It might be interesting to examine the scan statistics from the Monte Carlo steps.
 ```{r, fig.keep="all", fig.show="hold"}
-# hist(unlist(NYCfever$llr), main="Monte Carlo")
+## hist(unlist(NYCfever$llr), main="Monte Carlo")
 
 # Let's draw a line for the clusters in the observed data
-# abline(v=NYCfever$col[,c("TEST_STAT")], col = "red")
+## abline(v=NYCfever$col[,c("TEST_STAT")], col = "red")
 ```
 
 This shows why none of the observed clusters had small p=values.
@@ -130,17 +130,17 @@ ss.options(list(CaseFile="NM.cas",StartDate="1973/1/1",EndDate="1991/12/31",
 ss.options(c("NonCompactnessPenalty=0", "ReportGiniClusters=n", "LogRunToHistoryFile=n"))
 
 write.ss.prm(td,"testnm")
-# testnm = satscan(td,"testnm")
+## testnm = satscan(td,"testnm", sslocation="C:/Program Files (x86)/SaTScan")
 ```
-Note that the parameter file need not have the same name as the case and other input files, which also need not share a name, though it may be helpful in keeping things organized later.
+Note that the parameter file need not have the same name as the case and other input files, which also need not share a name, though it may be helpful in keeping things organized.
 ```{r}
-summary(testnm)
+## summary(testnm)
 ```
 
 One of the elements of a `satscan` class object is the parameter set which was used to call SaTScan.  This may be useful, later.
 
 ```{r}
-head(testnm$prm,10)
+## head(testnm$prm,10)
 ```
 
 ```{r, echo=FALSE, include=FALSE    }
@@ -168,9 +168,9 @@ ss.options(list(TimeAggregationUnits = 3, NonCompactnessPenalty=0))
 ss.options(list(ReportGiniClusters="n", LogRunToHistoryFile="n"))
 
 write.ss.prm(td, "NHumberside")
-# NHumberside = satscan(td, "NHumberside")
+## NHumberside = satscan(td, "NHumberside", sslocation="C:/Program Files (x86)/SaTScan")
 
-# summary(NHumberside)
+## summary(NHumberside)
 ```
 
 ```{r, echo=FALSE, include=FALSE    }

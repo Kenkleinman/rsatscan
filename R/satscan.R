@@ -6,7 +6,7 @@
 #' directory location where the paramter file is located. 
 #' @param prmfilename A string containg the name of the parameter file, without the extension, i.e., no ".prm".
 #' @param sslocation A string containing the directory location where satscanbatch.exe (Windows) 
-#' is located.  The default value is its default location in windows 7.
+#' is located.  The default value is a common location in Windows 7.
 #' @param ssbatchfilename Name of the file containing the SaTScan executable.  This is likely to be
 #' either SaTScanBatch or SaTScanBatch64.  Omit the file extension.
 #' @param cleanup If true, deletes any SaTScan output files from the OS.
@@ -58,7 +58,7 @@ satscan = function(
     prmloc = paste0(stripslash(prmlocation),"/")
     infile = paste0(prmloc, prmfilename,".prm")
     if (!file.exists(infile))  stop("I can't find that parameter file")
-    system(paste(ssfile, infile), show.output.on.console=verbose)
+    system(paste(shQuote(ssfile), infile), show.output.on.console=verbose)
     prm = suppressWarnings(readLines(infile))
     mainfile = if  (file.exists(paste0(prmloc,prmfilename,".txt")))
       read.satscanmain(prmloc,prmfilename) else NA

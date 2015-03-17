@@ -14,7 +14,7 @@ directory location where the paramter file is located.}
 \item{prmfilename}{A string containg the name of the parameter file, without the extension, i.e., no ".prm".}
 
 \item{sslocation}{A string containing the directory location where satscanbatch.exe (Windows)
-is located.  The default value is its default location in windows 7.}
+is located.  The default value is a common location in Windows 7.}
 
 \item{ssbatchfilename}{Name of the file containing the SaTScan executable.  This is likely to be
 either SaTScanBatch or SaTScanBatch64.  Omit the file extension.}
