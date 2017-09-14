@@ -129,7 +129,10 @@ ss.options = function (invals=NULL, reset=FALSE) {
 #' @param invals A character vector, which will be added to the end of the 
 #' current paramter list.
 #' 
-#' @return Nothing.  
+#' @return Nothing.
+#'   
+#' @export
+#' 
 ss.options.extra = function(invals=NULL) {
   if (is.null(invals)) stop("This function doesn't do anything when there is no input")
   if (class(invals) != "character") stop("Please input a character vector")

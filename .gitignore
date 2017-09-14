@@ -1,11 +1,4 @@
-inst/doc
-CRAN.png
-/.Rproj/293FE5ED
-/.Rproj/293FE5ED/pcs/*
-/.Rproj.user
-/.Rproj.user/**
-/.Rproj.user/**/**
-.RData
-.Rbuildignore
-.Rhistory
 .Rproj.user
+.Rhistory
+.RData
+.Ruserdata
